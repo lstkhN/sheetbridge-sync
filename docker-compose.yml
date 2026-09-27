@@ -1,0 +1,9 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    ports: ["8000:8000"]
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+  # The MVP queue is process-local; use POST /worker/tick against api.
+  # A separate worker is intentionally not started because it cannot share memory.
+  # Production deploys replace InMemoryQueue with PostgreSQL (see migrations/).
