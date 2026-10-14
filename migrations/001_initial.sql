@@ -1,4 +1,5 @@
--- Target durable repository schema (PostgreSQL). MVP uses app.domain.InMemoryQueue.
+-- Target durable repository schema (PostgreSQL).
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TYPE sync_job_status AS ENUM ('pending', 'processing', 'done', 'dlq');
 CREATE TABLE sync_jobs (
   id UUID PRIMARY KEY,

@@ -1,7 +1,9 @@
 # ADR-001: очередь и доставка
 
-**Статус:** accepted (MVP)
+**Статус:** accepted
 
-MVP хранит задания в памяти под `RLock`: enqueue, claim и смена состояния атомарны в рамках процесса. Это позволяет запустить демо без Redis/Postgres и явно демонстрирует контракт очереди.
+Production использует PostgreSQL: enqueue защищён уникальным `idempotency_key`, а claim выполняется в транзакции через `FOR UPDATE SKIP LOCKED`. Lease возвращает незавершённую задачу в `pending` после сбоя worker. Доставка at-least-once; ключ события Sheets передаётся в CRM как идемпотентный ключ.
 
-Ограничение: данные и блокировки не разделяются между процессами/контейнерами. Поэтому production-реализация должна заменить `InMemoryQueue` на PostgreSQL, применить `migrations/001_initial.sql` и забирать задания через `FOR UPDATE SKIP LOCKED`. Доставка at-least-once; ключ события Sheets передаётся в CRM как идемпотентный ключ.
+`InMemoryQueue` оставлен только для локального demo-режима и unit-тестов. Он не разделяет
+данные между процессами и не должен использоваться в production. Схема находится в
+`migrations/001_initial.sql`, а production worker — в `app/worker.py`.

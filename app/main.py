@@ -8,7 +8,7 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 from .adapters import Bitrix24Http, DemoBitrix, DemoSheets, GoogleSheetsHttp
-from .domain import InMemoryQueue
+from .domain import InMemoryQueue, PostgresQueue
 from .service import SyncService
 
 
@@ -19,9 +19,14 @@ class SyncRequest(BaseModel):
 
 
 def build_service() -> SyncService:
-    if os.getenv("ADAPTER_MODE", "demo") == "live":
-        return SyncService(InMemoryQueue(), GoogleSheetsHttp(os.environ["GOOGLE_API_KEY"]), Bitrix24Http(os.environ["BITRIX_WEBHOOK_URL"], os.environ["BITRIX_ALLOWED_HOST"]))
-    return SyncService(InMemoryQueue(), DemoSheets({}), DemoBitrix())
+    mode = os.getenv("ADAPTER_MODE", "demo")
+    backend = os.getenv("QUEUE_BACKEND", "memory")
+    queue = (PostgresQueue(os.environ["DATABASE_URL"], int(os.getenv("WORKER_LEASE_SECONDS", "60")))
+             if backend == "postgres" else InMemoryQueue())
+    if mode == "live":
+        return SyncService(queue, GoogleSheetsHttp(os.environ["GOOGLE_API_KEY"]),
+                            Bitrix24Http(os.environ["BITRIX_WEBHOOK_URL"], os.environ["BITRIX_ALLOWED_HOST"]))
+    return SyncService(queue, DemoSheets({}), DemoBitrix())
 
 
 @asynccontextmanager
@@ -39,6 +44,9 @@ def service(request: Request) -> SyncService:
 
 def admin_auth(x_admin_token: str | None = Header(default=None)) -> None:
     expected = os.getenv("SYNC_ADMIN_TOKEN")
+    required = os.getenv("REQUIRE_ADMIN_AUTH", "false").lower() == "true"
+    if required and not expected:
+        raise HTTPException(503, "admin auth is not configured")
     if expected and x_admin_token != expected:
         raise HTTPException(401, "invalid admin token")
 
