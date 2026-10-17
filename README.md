@@ -1,9 +1,34 @@
+<p align="center">
+  <img src="docs/assets/logo.svg" alt="SheetBridge Sync" width="760">
+</p>
+
+<p align="center">
+  <strong>Надёжная синхронизация Google Sheets → Bitrix24</strong><br>
+  Очередь PostgreSQL · идемпотентность · retries · DLQ · production worker
+</p>
+
+<p align="center">
+  <a href="https://github.com/lstkhN/sheetbridge-sync/actions"><img src="https://img.shields.io/github/actions/workflow/status/lstkhN/sheetbridge-sync/ci.yml?label=CI&logo=github" alt="CI"></a>
+  <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/FastAPI-0.110%2B-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT license">
+</p>
+
 # SheetBridge Sync
 
 Показательный production-ready сервис для синхронизации строки Google Sheets с контактом
 Bitrix24 CRM. Сервис принимает события об изменениях, сохраняет их в надёжную очередь
 PostgreSQL и обрабатывает отдельными worker-процессами. Повторная доставка одного события
 идемпотентна и не создаёт дубликаты контактов.
+
+## Визуальный обзор
+
+<p align="center">
+  <img src="docs/assets/api-preview.svg" alt="Предпросмотр API и метрик SheetBridge Sync" width="900">
+</p>
+
+<p align="center"><em>Очередь, статусы задач и ответ API — визуальное превью проекта.</em></p>
 
 ## Архитектура
 
@@ -19,6 +44,12 @@ PostgreSQL и обрабатывает отдельными worker-процес�
 - **Адаптеры** поддерживают `demo`-режим для разработки и HTTPS-интеграции в `live`-режиме.
 - Доставка выполняется по принципу **at-least-once**. Upsert Bitrix24 использует стабильный
   `ORIGIN_ID`, поэтому повторная обработка безопасна.
+
+## Поток синхронизации
+
+<p align="center">
+  <img src="docs/assets/flow-preview.svg" alt="Поток синхронизации от Google Sheets к Bitrix24" width="900">
+</p>
 
 ## Быстрый запуск через Docker
 

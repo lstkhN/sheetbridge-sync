@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 240" role="img" aria-labelledby="title desc">
+  <title id="title">SheetBridge Sync</title><desc id="desc">Логотип SheetBridge Sync: таблица соединена с CRM-мостом</desc>
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#36d399"/><stop offset="1" stop-color="#38bdf8"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".2"/></filter></defs>
+  <rect width="960" height="240" rx="32" fill="#0b1220"/>
+  <g filter="url(#s)"><rect x="48" y="48" width="144" height="144" rx="26" fill="url(#g)"/></g>
+  <path d="M78 78h84v84H78z" fill="none" stroke="#07111d" stroke-width="8"/><path d="M78 106h84M78 134h84M106 78v84M134 78v84" stroke="#07111d" stroke-width="6" opacity=".8"/>
+  <path d="M180 120h112" stroke="#8be9c5" stroke-width="8" stroke-linecap="round"/><path d="m277 94 28 26-28 26" fill="none" stroke="#8be9c5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="340" y="126" font-family="Inter,Arial,sans-serif" font-size="54" font-weight="800" fill="#f8fafc">SheetBridge</text><text x="342" y="174" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="600" fill="#8be9c5">SYNC · RELIABLE INTEGRATIONS</text>
+</svg>
